@@ -1,9 +1,10 @@
 {
 	"name": "kind-language-server",
 	"description": "A language server for kind language",
+	"publisher": "RafaelSantos",
 	"author": "Rafael Santos",
 	"license": "MIT",
-	"version": "1.0.0",
+	"version": "1.0.2",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/rafaelnsantos/kind-language-server"
@@ -19,6 +20,11 @@
 	"activationEvents": [
 		"onLanguage:kind"
 	],
+	"icon": "images/kindelia_logo.png",
+	"galleryBanner": {
+		"color": "#030518",
+		"theme": "dark"
+	},
 	"main": "./client/out/extension",
 	"contributes": {
 		"configuration": {
