@@ -1,0 +1,4 @@
+Test(a: Nat): String
+  ?b
+
+test: Nat
