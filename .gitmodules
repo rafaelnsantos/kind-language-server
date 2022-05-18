@@ -1,0 +1,3 @@
+[submodule "Kind"]
+	path = Kind
+	url = git@github.com:Kindelia/Kind.git
