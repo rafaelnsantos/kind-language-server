@@ -4,11 +4,9 @@ Heavily documented sample code for https://code.visualstudio.com/api/language-ex
 
 ## Functionality
 
-This Language Server works for plain text file. It has the following language features:
-- Completions
-- Diagnostics regenerated on each file change or configuration change
-
-It also includes an End-to-End test.
+This Language Server works for kind files. It has the following language features:
+[] Completions
+[x] Diagnostics regenerated on each file change or configuration change
 
 ## Structure
 
@@ -16,11 +14,18 @@ It also includes an End-to-End test.
 .
 ├── client // Language Client
 │   ├── src
-│   │   ├── test // End to End tests for Language Client / Server
+│   │   ├── test // End to End tests for Language Client / Server (old, from example)
 │   │   └── extension.ts // Language Client entry point
 ├── package.json // The extension manifest.
 └── server // Language Server
     └── src
+        ├── checker // type checker
+        │   ├── parseKindCheck.ts
+        │   └── runKindCheck.ts
+        ├── completion // code completion
+        │   ├── getSuggestions.ts // 
+        │   ├── getTypeFunctions.ts // functions from base types
+        │   └── getTypes.ts // types from base
         └── server.ts // Language Server entry point
 ```
 
@@ -33,6 +38,7 @@ It also includes an End-to-End test.
 - Select `Launch Client` from the drop down (if it is not already).
 - Press ▷ to run the launch config (F5).
 - If you want to debug the server as well, use the launch configuration `Attach to Server`
-- In the [Extension Development Host](https://code.visualstudio.com/api/get-started/your-first-extension#:~:text=Then%2C%20inside%20the%20editor%2C%20press%20F5.%20This%20will%20compile%20and%20run%20the%20extension%20in%20a%20new%20Extension%20Development%20Host%20window.) instance of VSCode, open a document in 'plain text' language mode.
-  - Type `j` or `t` to see `Javascript` and `TypeScript` completion.
-  - Enter text content such as `AAA aaa BBB`. The extension will emit diagnostics for all words in all-uppercase.
+- In the [Extension Development Host](https://code.visualstudio.com/api/get-started/your-first-extension#:~:text=Then%2C%20inside%20the%20editor%2C%20press%20F5.%20This%20will%20compile%20and%20run%20the%20extension%20in%20a%20new%20Extension%20Development%20Host%20window.) instance of VSCode, open a document in 'kind' language mode.
+
+## Roadmap
+  Write lexer and parser for code completion [kind-antlr4-c3](https://github.com/rafaelnsantos/kind-antlr4-c3)

@@ -3,3 +3,4 @@ Kind/bin
 Kind/blog
 Kind/web
 Kind/base/Ether/RLP/aux.kind
+Kind/base/App/**
