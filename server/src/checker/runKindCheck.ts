@@ -19,7 +19,6 @@ export const runKindCheck = async (textDocument: TextDocument): Promise<Diagnost
 
   if (!fileWithDir) return [];
 
-  // workspace.fs.copy(projectDir, workspace.)
   // salva texto em um arquivo temporario para ser checado
   const filename = posix.basename(textDocument.uri);
 

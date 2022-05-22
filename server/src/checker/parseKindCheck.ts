@@ -1,34 +1,41 @@
-import { Diagnostic, DiagnosticSeverity } from "vscode-languageserver";
+import { Diagnostic, DiagnosticSeverity, Position } from "vscode-languageserver";
+
+const getPosition = (lineWithPosition: string): Position => {
+  const sss = lineWithPosition.split(".kind:")[1].split(":");
+
+  const line = parseInt(sss[0]);
+  const character = parseFloat(sss[1].replace("'", ""));
+
+  return {
+    line,
+    character,
+  };
+};
 
 // recebe mensagem do type checker e retorna lista de erros
-// TODO: improve parser
+// TODO: improve parser with REGEX?
 export const parseKindCheck = (text: string): Diagnostic[] => {
   const diagnostics: Diagnostic[] = [];
 
   if (text.includes("Inside")) {
-    const teste = text.split("':");
+    const lines = text.split(/\n{2,}/g);
+    const errors = lines.length > 1 ? lines.slice(1, lines.length) : lines;
 
-    teste.forEach((t) => {
-      if (!t.includes(".kind:")) return;
+    errors.forEach((error) => {
+      const test = error.split("\n").filter((line) => !line.includes("|"));
 
-      let lines = t
-        .split("\n")
-        .slice(1, -1)
-        .filter((l) => !l.includes("Inside") && !l.includes("|") && l !== "");
+      if (test.length < 2) return;
 
-      if (lines.some((line) => line.includes("Type mismatch."))) {
-        lines = lines.slice(lines.indexOf("Type mismatch."), lines.length);
-      } else if (lines.some((line) => line.includes("Undefined reference"))) {
-        lines = lines.slice(lines.indexOf("Type mismatch."), lines.length);
-      }
+      const lineWithPosition = test[0].includes("Inside") ? test.shift() : test.pop();
 
-      const sss = t.split(".kind:")[1].split(":");
+      if (!lineWithPosition) return;
 
-      const line = parseInt(sss[0]);
-      const character = parseFloat(sss[1].replace("'", ""));
+      const message = test.join("\n");
+
+      const { line, character } = getPosition(lineWithPosition);
 
       diagnostics.push({
-        message: lines.join("\n"),
+        message,
         severity: DiagnosticSeverity.Error,
         range: {
           start: {
