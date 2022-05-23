@@ -17,6 +17,7 @@ import {
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { runKindCheck } from "./checker/runKindCheck";
 import { getSuggestions } from "./completion/getSuggestions";
+import { debounce } from "./debounce";
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -128,10 +129,12 @@ documents.onDidClose((e) => {
   documentSettings.delete(e.document.uri);
 });
 
+const [validateTextDocumentDebounced] = debounce(validateTextDocument, 500);
+
 // The content of a text document has changed. This event is emitted
 // when the text document first opened or when its content has changed.
 documents.onDidChangeContent((change) => {
-  validateTextDocument(change.document);
+  validateTextDocumentDebounced(change.document);
 });
 
 async function validateTextDocument(textDocument: TextDocument): Promise<void> {
