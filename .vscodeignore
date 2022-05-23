@@ -5,8 +5,6 @@ Kind/web
 Kind/base/Ether/RLP/aux.kind
 Kind/base/App/**
 node_modules/
-server/node_modules/
-client/node_modules/
 *.vsix
 scripts/
 Kind/

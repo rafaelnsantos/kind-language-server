@@ -38,16 +38,16 @@ export interface TempDir {
 
 export const TempDir = (): TempDir => {
   // initialization
-  const dir = mkdtempSync(join(tmpdir()));
+  const dir = mkdtempSync(tmpdir());
 
   const cleanup = () => {
     rmSync(dir, { recursive: true });
   };
 
   const writeFile = (path: string, text: string) => {
-    const file = join(dir, path);
-    writeFileSync(file, text);
-    return file;
+    const tempPath = path.replace(process.cwd(), dir);
+    writeFileSync(tempPath, text);
+    return tempPath;
   };
 
   cleanup();
