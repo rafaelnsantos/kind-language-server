@@ -44,7 +44,7 @@ export const parseKindCheck = (text: string): Diagnostic[] => {
           },
           end: {
             line: line - 1,
-            character: 1000,
+            character: Number.MAX_VALUE,
           },
         },
       });

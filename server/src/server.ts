@@ -18,6 +18,7 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import { runKindCheck } from "./checker/runKindCheck";
 import { getSuggestions } from "./completion/getSuggestions";
 import { debounce } from "./debounce";
+import { TempDir } from "./checker/TempDir";
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -65,7 +66,10 @@ connection.onInitialize((params: InitializeParams) => {
   return result;
 });
 
+let tmpDir: TempDir;
+
 connection.onInitialized(() => {
+  tmpDir = TempDir();
   if (hasConfigurationCapability) {
     // Register for all configuration changes.
     connection.client.register(DidChangeConfigurationNotification.type, undefined);
@@ -143,7 +147,7 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
   // The validator creates diagnostics for all uppercase words length 2 and more
   // const text = textDocument.getText();
 
-  const diagnostics = await runKindCheck(textDocument);
+  const diagnostics = await runKindCheck(textDocument, tmpDir);
   // const problems = 0;
 
   // Send the computed diagnostics to VSCode.
@@ -178,6 +182,14 @@ connection.onCompletionResolve((item: CompletionItem): CompletionItem => {
 // Make the text document manager listen on the connection
 // for open, change and close text document events
 documents.listen(connection);
+
+connection.onShutdown(() => {
+  tmpDir.cleanup();
+});
+
+connection.onExit(() => {
+  tmpDir.cleanup();
+});
 
 // Listen on the connection
 connection.listen();
