@@ -24,7 +24,7 @@ export const runKindCheck = async (
 
   // salva o arquivo no diretorio temporario
   tempDir.writeFile(join(projectRootFolder, fileWithDir), text);
-
+  console.log(`cd ${join(tempDir.dir, projectRootFolder)} && kind ${fileWithDir}`);
   // roda kind check no arquivo temporario
   // response é a mensagem do type check do kind
   const response = execSync(`cd ${join(tempDir.dir, projectRootFolder)} && kind ${fileWithDir}`, {

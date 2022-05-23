@@ -16,7 +16,7 @@ const getPosition = (lineWithPosition: string): Position => {
 // TODO: improve parser with REGEX?
 export const parseKindCheck = (text: string): Diagnostic[] => {
   const diagnostics: Diagnostic[] = [];
-
+  console.log(text);
   if (text.includes("Inside")) {
     const lines = text.split(/\n{2,}/g);
     const errors = lines.length > 1 ? lines.slice(1, lines.length) : lines;
@@ -28,7 +28,7 @@ export const parseKindCheck = (text: string): Diagnostic[] => {
 
       const lineWithPosition = test[0].includes("Inside") ? test.shift() : test.pop();
 
-      if (!lineWithPosition) return;
+      if (!lineWithPosition || !lineWithPosition.includes(".kind:")) return;
 
       const message = test.join("\n");
 
