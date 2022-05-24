@@ -1,5 +1,5 @@
+import { randomUUID } from "crypto";
 import {
-  mkdtempSync,
   rmSync,
   mkdirSync,
   existsSync,
@@ -8,7 +8,7 @@ import {
   copyFileSync,
   writeFileSync,
 } from "fs";
-import { tmpdir } from "os";
+import { homedir } from "os";
 import { join } from "path";
 
 /**
@@ -36,9 +36,18 @@ export interface TempDir {
   writeFile: (path: string, text: string) => string;
 }
 
+const cacheDir = join(homedir(), ".kind-cache");
+
 export const TempDir = (): TempDir => {
   // initialization
-  const dir = mkdtempSync(tmpdir());
+  try {
+    mkdirSync(cacheDir);
+  } catch (err) {
+    // console.error(err);
+  }
+
+  const dir = join(cacheDir, randomUUID());
+  mkdirSync(dir);
 
   const cleanup = () => {
     rmSync(dir, { recursive: true });
@@ -46,7 +55,11 @@ export const TempDir = (): TempDir => {
 
   const writeFile = (path: string, text: string) => {
     const tempPath = path.replace(process.cwd(), dir);
-    writeFileSync(tempPath, text);
+    try {
+      writeFileSync(tempPath, text);
+    } catch (err) {
+      console.error(err);
+    }
     return tempPath;
   };
 
